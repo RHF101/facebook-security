@@ -1,0 +1,13 @@
+{
+  "name": "fb-phishing-demo",
+  "version": "1.0.0",
+  "description": "Facebook Phishing Demo for Security Education",
+  "main": "api/capture.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["security", "education", "phishing-demo"],
+  "author": "Security Researcher",
+  "license": "MIT"
+}
