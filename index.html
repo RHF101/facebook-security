@@ -1,44 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <meta name="description" content="Connect with people">
+    <meta name="description" content="Connect with people around you">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%92%3C/text%3E%3C/svg%3E">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231877f2'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='55' font-family='Arial'%3Ef%3C/text%3E%3C/svg%3E">
     
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            margin: 0;
-            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f0f2f5;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: system-ui, -apple-system, sans-serif;
+            padding: 20px;
         }
-        #app { display: none; }
-        .loader {
-            width: 40px;
-            height: 40px;
+        #root { display: none; }
+        #loading {
+            width: 35px;
+            height: 35px;
             border: 3px solid #e0e0e0;
             border-top-color: #1877f2;
             border-radius: 50%;
-            animation: s 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
-        @keyframes s { to { transform: rotate(360deg); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div id="load"><div class="loader"></div></div>
-    <div id="app"></div>
+    <div id="loading"></div>
+    <div id="root"></div>
     
-    <script src="asset.js"></script>
+    <script src="core.js"></script>
 </body>
 </html>
